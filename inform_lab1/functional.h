@@ -1,7 +1,7 @@
 #ifndef FUNCTIONAL_H
 #define FUNCTIONAL_H
 
-#include <QWidget>
+#include <QObject>
 #include <QString>
 #include <QMap>
 #include <QChar>
@@ -13,13 +13,13 @@ struct table
     float frequency;
 };
 
-class functional: public QWidget
+class functional: public QObject
 {
 
     Q_OBJECT
 
 public:
-    functional(QWidget *parent = 0);
+    functional(QObject *parent = 0);
     ~functional();
 
 protected:
@@ -33,6 +33,10 @@ protected:
 
     // массив для хранения символов подстановки
     QMap<QChar, QChar> KeyMap;
+
+    // ещё две карты, которые, возможно, не пригодятся
+    QMap<QChar, QChar> FreqMap;
+    QMap<QChar, QChar> DecMap;
 
     // строки, с которыми будем работать
     QString text;

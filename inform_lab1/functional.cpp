@@ -1,8 +1,8 @@
 #include "functional.h"
 
 // конструктор
-functional::functional(QWidget *parent)
-    : QWidget(parent)
+functional::functional(QObject *parent)
+    : QObject(parent)
 {
         GlobalFreq[0].symbol ='e';
         GlobalFreq[0].frequency = 12.7;
@@ -110,7 +110,7 @@ void functional::createKey()
     b = qrand()%102 + 2;
 
     // формируем промежуточный массив "символ - номер символа-замены"
-    int isymbols[26];
+    QMap <char, int> isymbols;
     char csymbols[26];
     int x = 0;
     char i;
@@ -136,9 +136,16 @@ void functional:: encode()
     encoded = text;
     int textLenght = encoded.length();
 
+    // вот тут учесть, что в строке есть не только букы
+    // но и всякие там пробелы и тому подобное
     for (int i = 0; i<textLenght; i++)
     {
-       encoded[i] = KeyMap[text[i]];
+        // тут должна быть проверка на то, является ли символ буквой
+        // если символ не буква, то ничего с ним не делаем
+       if (encoded[i]!=' ' && encoded[i]!='.' && encoded[i]!=',' && encoded[i]!=':')
+       {
+           encoded[i] = KeyMap[text[i]];
+       }
     }
 
 }
@@ -147,22 +154,30 @@ void functional:: encode()
 // функция частотного анализа
 void functional::analize()
 {
-    // получаем таблицу символ - частота
-    for (int i=0; i<=26; i++)
-    {
-        MyFreq[i].frequency = encoded.count(MyFreq[i].symbol);
-    }
-
-    // тут должна быть сортировка MyFreq
-
 
     decrypted = encoded;
     int textLenght = decrypted.length();
 
-   /* for (int i = 0; i<textLenght; i++)
+    // получаем таблицу символ - частота
+    // частоты представляем в процентах
+    for (int i=0; i<=26; i++)
     {
-      // decrypted[i] =
-    } */
+        // получаем количественное значение
+        MyFreq[i].frequency = encoded.count(MyFreq[i].symbol);
+        // переводим его в проценты
+        MyFreq[i].frequency = (MyFreq[i].frequency / textLenght)*100;
+
+    }
+
+    // тут должна быть сортировка MyFreq
+
+    // возможно, следует создать FreqMap[]
+
+
+    for (int i = 0; i<textLenght; i++)
+    {
+       // decrypted[i] = GlobalFreq[].symbol;
+    }
 
 }
 

@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
     MyFunc = new functional();
 
     connect (this, SIGNAL(newTextSIGNAL(QString)), MyFunc, SLOT(textSlot(QString)));
-    connect (this, SLOT(resultSLOT(QString,QString,QString)), MyFunc, SIGNAL(resultSIGNAL(QString,QString,QString)));
+    connect (MyFunc, SIGNAL(resultSIGNAL(QString,QString,QString)), this, SLOT(resultSLOT(QString,QString,QString)));
 
 }
 
@@ -37,10 +37,14 @@ void MainWindow::resultSLOT(QString encodedText, QString decryptedText, QString 
     ui->label_4->show();
 
     ui->label_5->show();
+
+    ui->textEdit_4->insertPlainText(decText);
     ui->textEdit_4->show();
 
     ui->pushButton_2->show();
     ui->pushButton_3->show();
+
+    // как-то сделать так, чтобы главное окно увеличивалось в размерах и появлялся скролл!!!
 
 }
 
@@ -53,6 +57,21 @@ MainWindow::~MainWindow()
 // clik по зашифровать
 void MainWindow::on_pushButton_clicked()
 {
+    //заблокировать кнопку после нажатия!!!!
+    //ui->pushButton->
+
     QString txt = ui->textEdit->toPlainText();
     emit newTextSIGNAL(txt);
+}
+
+// показать ключ шифрования
+void MainWindow::on_pushButton_3_clicked()
+{
+
+}
+
+// показать таблицу частот
+void MainWindow::on_pushButton_2_clicked()
+{
+
 }
