@@ -7,17 +7,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-
-    ui->textEdit_2->hide();
-    ui->label_3->hide();
-
-    ui->textEdit_3->hide();
-    ui->label_4->hide();
-    ui->pushButton_2->hide();
-    ui->pushButton_3->hide();
-    ui->label_5->hide();
-    ui->textEdit_4->hide();
-
     MyFunc = new functional();
 
     connect (this, SIGNAL(newTextSIGNAL(QString)), MyFunc, SLOT(textSlot(QString)));
@@ -29,23 +18,8 @@ void MainWindow::resultSLOT(QString encodedText, QString decryptedText, QString 
 {
 
     ui->textEdit_2->insertPlainText(encodedText);
-    ui->textEdit_2->show();
-    ui->label_3->show();
-
     ui->textEdit_3->insertPlainText(decryptedText);
-    ui->textEdit_3->show();
-    ui->label_4->show();
-
-    ui->label_5->show();
-
     ui->textEdit_4->insertPlainText(decText);
-    ui->textEdit_4->show();
-
-    ui->pushButton_2->show();
-    ui->pushButton_3->show();
-
-    // как-то сделать так, чтобы главное окно увеличивалось в размерах и появлялся скролл!!!
-
 }
 
 MainWindow::~MainWindow()
@@ -58,7 +32,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_pushButton_clicked()
 {
     //заблокировать кнопку после нажатия!!!!
-    //ui->pushButton->
+    ui->pushButton->setEnabled(false);
 
     QString txt = ui->textEdit->toPlainText();
     emit newTextSIGNAL(txt);
