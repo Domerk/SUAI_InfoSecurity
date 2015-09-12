@@ -28,6 +28,7 @@ protected:
     void encode();
     void createKey();
     void analize();
+    void decript();
 
     bool caseTable(const table &s1, const table &s2);
 

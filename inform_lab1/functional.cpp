@@ -202,10 +202,25 @@ void functional::analize()
 
     // возможно, следует создать FreqMap[]
 
+    for (int i = 0; i<26; i++)
+    {
+        FreqMap[MyFreq[i].symbol] = GlobalFreq[i].symbol;
+    }
+
 
     for (int i = 0; i<textLenght; i++)
     {
-       // decrypted[i] = GlobalFreq[].symbol;
+        if (decrypted[i].isLetter())
+        {
+            if (decrypted[i].isUpper())
+            {
+                decrypted[i] = FreqMap[encoded[i].toLower()].toUpper();
+            }
+            else
+            {
+                decrypted[i] = FreqMap[encoded[i]];
+            }
+        }
     }
 
 }
