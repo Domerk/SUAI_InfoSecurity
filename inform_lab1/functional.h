@@ -5,13 +5,9 @@
 #include <QString>
 #include <QMap>
 #include <QChar>
+#include <QVector>
 #include <QTime>
-
-struct table
-{
-    QChar symbol;
-    float frequency;
-};
+#include <QtAlgorithms>
 
 class functional: public QObject
 {
@@ -22,14 +18,24 @@ public:
     functional(QObject *parent = 0);
     ~functional();
 
+    struct table
+    {
+        QChar symbol;
+        float frequency;
+    };
+
 protected:
     void encode();
     void createKey();
     void analize();
 
+    bool caseTable(const table &s1, const table &s2);
+
     // массивы из структур для хранения частот
-    table MyFreq[26];
-    table GlobalFreq[26];
+
+    QVector<table> MyFreq;
+    QVector<table> GlobalFreq;
+
 
     // массив для хранения символов подстановки
     QMap<QChar, QChar> KeyMap;

@@ -4,6 +4,18 @@
 functional::functional(QObject *parent)
     : QObject(parent)
 {
+    // заполняем таблицу частот встречаемости букв в английском языке
+    // используем строчные символы
+
+    // да, это выглядит просто жесть, но сделать
+
+
+    for (char i='a'; i<='z'; i++)
+    {
+        GlobalFreq.push_back({' ', 0.0});
+        MyFreq.push_back({i, 0.0});
+    }
+
         GlobalFreq[0].symbol ='e';
         GlobalFreq[0].frequency = 12.7;
 
@@ -82,15 +94,17 @@ functional::functional(QObject *parent)
         GlobalFreq[25].symbol ='z';
         GlobalFreq[25].frequency = 0.07;
 
-        int x = 0;
-        for (char i='a'; i<='z'; i++)
-        {
-            MyFreq[x].symbol = (QChar)i;
-            MyFreq[x].frequency = 0;
-            x++;
-        }
+        // создаём шаблон для таблицы частот встречаемости символов
+        // введённого пользователем текста
 
 }
+
+
+bool caseTableLessThan(const functional::table &s1, const functional::table &s2)
+{
+    return s1.frequency > s2.frequency;
+}
+
 
 // формируем ключ и таблицу, по которой происходит подмена
 void functional::createKey()
@@ -122,6 +136,7 @@ void functional::createKey()
     }
 
     // формируем таблицу замены
+    // посмотреть for в 11м стандарте
     for (i='a'; i<='z'; i++)
     {
         KeyMap[i] = csymbols[isymbols[i]];
@@ -140,14 +155,21 @@ void functional:: encode()
     // но и всякие там пробелы и тому подобное
     for (int i = 0; i<textLenght; i++)
     {
-        // тут должна быть проверка на то, является ли символ буквой
+        // проверка на то, является ли символ буквой
         // если символ не буква, то ничего с ним не делаем
-       if (encoded[i]!=' ' && encoded[i]!='.' && encoded[i]!=',' && encoded[i]!=':')
+        // регистр игнорируется
+       if (encoded[i].isLetter())
        {
-           encoded[i] = KeyMap[text[i]];
+           if (encoded[i].isUpper())
+           {
+               encoded[i] = KeyMap[text[i].toLower()].toUpper();
+           }
+           else
+           {
+               encoded[i] = KeyMap[text[i]];
+           }
        }
     }
-
 }
 
 
@@ -160,7 +182,7 @@ void functional::analize()
 
     // получаем таблицу символ - частота
     // частоты представляем в процентах
-    for (int i=0; i<=26; i++)
+    for (int i=0; i<26; i++)
     {
         // получаем количественное значение
         MyFreq[i].frequency = encoded.count(MyFreq[i].symbol);
@@ -170,6 +192,13 @@ void functional::analize()
     }
 
     // тут должна быть сортировка MyFreq
+    // нужен автоматический сорт
+
+    // вот тут всякое г выползает
+    // ошибка при сравнении, возможно
+
+    qSort(MyFreq.begin(), MyFreq.end(), caseTableLessThan);
+
 
     // возможно, следует создать FreqMap[]
 
