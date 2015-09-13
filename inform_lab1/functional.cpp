@@ -1,14 +1,15 @@
 #include "functional.h"
 
+// ===============================================================
 // конструктор
+// ===============================================================
 functional::functional(QObject *parent)
     : QObject(parent)
 {
     // заполняем таблицу частот встречаемости букв в английском языке
     // используем строчные символы
 
-    // да, это выглядит просто жесть, но сделать
-
+    // да, это выглядит просто жесть
 
     for (char i='a'; i<='z'; i++)
     {
@@ -99,14 +100,16 @@ functional::functional(QObject *parent)
 
 }
 
-
+// ===============================================================
+// ===============================================================
 bool caseTableLessThan(const functional::table &s1, const functional::table &s2)
 {
     return s1.frequency > s2.frequency;
 }
 
-
+// ===============================================================
 // формируем ключ и таблицу, по которой происходит подмена
+// ===============================================================
 void functional::createKey()
 {
     // возможные значения а: 1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23 и 25
@@ -136,16 +139,17 @@ void functional::createKey()
     }
 
     // формируем таблицу замены
-    // посмотреть for в 11м стандарте
     for (i='a'; i<='z'; i++)
     {
         KeyMap[i] = csymbols[isymbols[i]];
+        DecMap[csymbols[isymbols[i]]]=(QChar)i;
     }
 
 }
 
-
+// ===============================================================
 // функция шифрования исходного текста
+// ===============================================================
 void functional:: encode()
 {
     encoded = text;
@@ -172,8 +176,9 @@ void functional:: encode()
     }
 }
 
-
+// ===============================================================
 // функция частотного анализа
+// ===============================================================
 void functional::analize()
 {
 
@@ -191,16 +196,7 @@ void functional::analize()
 
     }
 
-    // тут должна быть сортировка MyFreq
-    // нужен автоматический сорт
-
-    // вот тут всякое г выползает
-    // ошибка при сравнении, возможно
-
     qSort(MyFreq.begin(), MyFreq.end(), caseTableLessThan);
-
-
-    // возможно, следует создать FreqMap[]
 
     for (int i = 0; i<26; i++)
     {
@@ -225,7 +221,32 @@ void functional::analize()
 
 }
 
+// ===============================================================
+// ===============================================================
+void functional::decript()
+{
+    dectext = encoded;
+    int textLenght = dectext.length();
 
+    for (int i = 0; i<textLenght; i++)
+    {
+        if (dectext[i].isLetter())
+        {
+            if (dectext[i].isUpper())
+            {
+                dectext[i] = DecMap[encoded[i].toLower()].toUpper();
+            }
+            else
+            {
+                dectext[i] = DecMap[encoded[i]];
+            }
+        }
+    }
+
+}
+
+// ===============================================================
+// ===============================================================
 void functional::textSlot(QString newText)
 {
     // получили текст
@@ -236,10 +257,69 @@ void functional::textSlot(QString newText)
     encode();
     // пытаемся взломать
     analize();
+    // дешифруем
+    decript();
     emit resultSIGNAL(encoded, decrypted, dectext);
 }
 
+// ===============================================================
+// ===============================================================
+void functional::KeySLOT()
+{
+    // формируем строку - вывод значений ключей
+    QString str;
+    str.append(tr("<p>Ключ шифрования: а = "));
+    str.append(QString::number(a, 10));
+    str.append(tr(", b = "));
+    str.append(QString::number(b, 10));
+    str.append("</p><br /><table border = 1 cellpadding = 2><tr><td><b>Исходный символ</b></td><td><b>Символы замены</b></td></tr>");
+
+    for (char i = 'a'; i<='z'; i++)
+    {
+        str.append("<tr><td>");
+        str.append(QChar(i));
+        str.append("</td><td>");
+        str.append(KeyMap[QChar(i)]);
+        str.append("</td></tr>");
+    }
+
+    str.append("</table>");
+
+    emit keySIGNAL(str);
+}
+
+// ===============================================================
+// ===============================================================
+void functional::FreqSLOT()
+{
+    // формируем строку - вывод частотного анализа
+    QString str;
+
+    str.append("<table border = 1 cellpadding = 2><tr><td><b>Символ текста</b></td><td><b>Частота</b></td><td><b>Символ алфавита</b></td><td><b>Частота</b></td></tr>");
+
+    for (int i = 0; i<26; i++)
+    {
+
+        str.append("<tr><td>");
+        str.append(MyFreq[i].symbol);
+        str.append("</td><td>");
+        str.append(QString::number(MyFreq[i].frequency, 10, 2));
+        str.append("</td><td>");
+        str.append(GlobalFreq[i].symbol);
+        str.append("</td><td>");
+        str.append(QString::number(GlobalFreq[i].frequency, 10, 2));
+        str.append("</td></tr>");
+    }
+
+    str.append("</table>");
+
+    emit freqSIGNAL(str);
+
+}
+
+// ===============================================================
 // деструктор
+// ===============================================================
 functional::~functional()
 {
 

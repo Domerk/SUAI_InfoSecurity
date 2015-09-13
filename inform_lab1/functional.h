@@ -21,7 +21,7 @@ public:
     struct table
     {
         QChar symbol;
-        float frequency;
+        double frequency;
     };
 
 protected:
@@ -55,9 +55,13 @@ protected:
 
 public slots:
     void textSlot (QString newText);
+    void KeySLOT();
+    void FreqSLOT();
 
 signals:
     void resultSIGNAL (QString encoded, QString decrypted, QString dectext);
+    void keySIGNAL (QString);
+    void freqSIGNAL (QString);
 
 };
 
