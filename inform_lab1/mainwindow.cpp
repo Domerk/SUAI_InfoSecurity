@@ -43,6 +43,9 @@ MainWindow::~MainWindow()
 void MainWindow::on_pushButton_clicked()
 {
     QString txt = ui->textEdit->toPlainText();
+    ui->textEdit_2->clear();
+    ui->textEdit_3->clear();
+    ui->textEdit_4->clear();
     emit newTextSIGNAL(txt);
 }
 
