@@ -5,8 +5,7 @@
 #include <QFileDialog>
 #include <QString>
 #include <QImage>
-#include <QPainter>
-#include <QWidget>
+#include <QPixmap>
 
 
 namespace Ui {
@@ -30,13 +29,8 @@ private:
     QString* fileName;
     QImage imgOrig;
     QImage imgEncryp;
-
-    QWidget* wgt1;
-    QWidget* wgt2;
-
-    QPainter* p1;
-    QPainter* p2;
-
+    QPixmap pxm1;
+    QPixmap pxm2;
 
 };
 
