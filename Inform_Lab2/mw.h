@@ -6,6 +6,7 @@
 #include <QString>
 #include <QImage>
 #include <QPixmap>
+#include <QResizeEvent>
 
 
 namespace Ui {
@@ -26,11 +27,13 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QFileDialog* fileDialog;
-    QString* fileName;
+    QString fileName;
     QImage imgOrig;
     QImage imgEncryp;
     QPixmap pxm1;
     QPixmap pxm2;
+
+    virtual void resizeEvent (QResizeEvent * event);
 
 };
 
