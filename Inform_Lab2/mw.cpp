@@ -7,19 +7,39 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    this->setWindowTitle(tr("Алгоритм шифрования DES"));
+
     fileDialog = new QFileDialog();
+    MyCrypt = new fnc();
+
+    ui->pbStart->setEnabled(false);
+    ui->pbInfo->setEnabled(false);
+
+    info = new QLabel();
+    info->setWindowTitle(tr("Статистика"));
+    info->setContentsMargins(10, 10, 10, 10);
+
+    QFont font = info->font();
+    font.setPixelSize(12);
+    info->setFont(font);
+
+    connect (this, SIGNAL(startSignal(QImage)), MyCrypt, SLOT(startSlot(QImage)));
+    connect (MyCrypt, SIGNAL(resultSignal(QImage, double, QString)), this, SLOT(resultSlot(QImage, double, QString)));
 
 }
 
 MainWindow::~MainWindow()
 {
     delete fileDialog;
+    delete MyCrypt;
+    delete info;
     delete ui;
 }
 
 void MainWindow::on_pbImg_clicked()
 {
-    fileName = fileDialog->getOpenFileName(0, tr("Выбор изображения"), "", "*.png *.bmp *.jpg *.jpeg");
+    //fileName = fileDialog->getOpenFileName(0, tr("Выбор изображения"), "", "*.png *.bmp *.jpg *.jpeg");
+    fileName = fileDialog->getOpenFileName(0, tr("Выбор изображения"), "", "*.png");
     if (!fileName.isEmpty())
     {
         QImage img(fileName);
@@ -33,13 +53,12 @@ void MainWindow::on_pbImg_clicked()
 
         imgOrig = img;
         imgEncryp = img;
-        pxm2 = pxm1;
         ui->lblOrigin->setPixmap(pxm1);
-        ui->lblCrypt->setPixmap(pxm2);
+
+        ui->pbStart->setEnabled(true);
+        ui->pbInfo->setEnabled(true);
         }
-
     }
-
 }
 
 void MainWindow::resizeEvent (QResizeEvent * event)
@@ -60,4 +79,35 @@ void MainWindow::resizeEvent (QResizeEvent * event)
         pxm2 = pxm2.scaled(w, h, Qt::KeepAspectRatio, Qt::SmoothTransformation);
         ui->lblCrypt->setPixmap(pxm2);
     }
+}
+
+void MainWindow::on_pbStart_clicked()
+{
+    emit startSignal(imgOrig);
+}
+
+void MainWindow::resultSlot(QImage resultImg, double correlation, QString frequencyDistribution)
+{
+    imgEncryp = resultImg;
+
+    int w = pxm2.width();
+    int h = pxm2.height();
+
+    pxm2 = pxm2.fromImage(imgEncryp);
+    pxm2 = pxm2.scaled(w, h, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    ui->lblCrypt->setPixmap(pxm2);
+
+    QString result;
+    result.append(tr("<p>Коэфиициент корреляции: "));
+    result.append(QString::number(correlation, 10, 3));
+    result.append(tr("</p><p>Частотное распределение:<br>"));
+    result.append(frequencyDistribution);
+    result.append("</p>");
+
+    info->setText(result);
+}
+
+void MainWindow::on_pbInfo_clicked()
+{
+    info->show();
 }

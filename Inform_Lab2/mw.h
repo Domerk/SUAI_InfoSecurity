@@ -7,6 +7,9 @@
 #include <QImage>
 #include <QPixmap>
 #include <QResizeEvent>
+#include <QLabel>
+#include <QFont>
+#include <fnc.h>
 
 
 namespace Ui {
@@ -23,6 +26,9 @@ public:
 
 private slots:
     void on_pbImg_clicked();
+    void on_pbStart_clicked();
+
+    void on_pbInfo_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -33,7 +39,17 @@ private:
     QPixmap pxm1;
     QPixmap pxm2;
 
+    QLabel *info;
+
+    fnc *MyCrypt;
+
     virtual void resizeEvent (QResizeEvent * event);
+
+signals:
+    void startSignal(QImage);
+
+public slots:
+    void resultSlot(QImage, double, QString);
 
 };
 
