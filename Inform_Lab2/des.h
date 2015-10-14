@@ -20,18 +20,6 @@ class Des : public QObject
 public:
     explicit Des(QObject *parent = 0);
     ~Des();
-
-    void IP();
-    void PermChoice1();
-    void PermChoice2();
-    void Expansion();
-    void inverse();
-    void xor_two();
-    void xor_oneE(int);
-    void xor_oneD(int);
-    void substitution();
-    void permutation();
-    void keygen();
     char * Encrypt(char *);
     char * Decrypt(char *);
 
@@ -66,6 +54,18 @@ protected:
         inv[8][8];
 
     char final[1000];
+
+    void IP();
+    void PermChoice1();
+    void PermChoice2();
+    void Expansion();
+    void inverse();
+    void xor_two();
+    void xor_oneE(int);
+    void xor_oneD(int);
+    void substitution();
+    void permutation();
+    void keygen();
 
 signals:
 

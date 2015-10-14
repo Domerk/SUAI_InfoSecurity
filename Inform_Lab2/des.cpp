@@ -362,7 +362,11 @@ char * Des::Encrypt(char *Text1)
 {
     int i,a1,j,nB,m,iB,k,K,B[8],n,d,round;
     char *Text=new char[1000];
-    strcpy(Text,Text1);
+
+    Text1[999]='\0';
+    for (int i = 0; i<999; i++)
+    Text[i] = Text1[i];
+
     i=strlen(Text);
     int mc=0;
     a1=i%8;
@@ -426,7 +430,13 @@ char * Des::Decrypt(char *Text1)
     int i,j,nB,m,iB,k,K,B[8],n,d,round;
     char *Text=new char[1000];
     unsigned char ch;
-    strcpy(Text,Text1);
+
+    // вот тут - вменяемое копирование
+
+    Text1[999]='\0';
+    for (int i = 0; i<999; i++)
+    Text[i]=Text1[i];
+
     i=strlen(Text);
     keygen();
     int mc=0;

@@ -19,23 +19,20 @@ void fnc::startSlot(QImage newImg)
     buffer.close();
 
     Des des;
-
-    // Вот тут нужно напилисть массив на куски по 1000 чаров
-
     int sizeArray = byteArray.size();
 
-    if (sizeArray%1000 != 0)
-        byteArray.resize(sizeArray + (1000 - sizeArray%1000));
+    if (sizeArray%999 != 0)
+        byteArray.resize(sizeArray + (999 - sizeArray%999));
 
     char *str1;
     char *str2;
 
     int i = 0;
-    while (i < (sizeArray + (1000 - sizeArray%1000)))
+    while (i < (sizeArray + (999 - sizeArray%999)))
     {
         str1 = des.Encrypt(byteArray.data() + i);
         str2 = des.Decrypt(str1 + i);
-        i += 1000;
+        i += 999;
     }
 
     QByteArray encrypted = QByteArray::fromRawData(str1, sizeof(*str1));

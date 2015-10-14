@@ -52,7 +52,6 @@ void MainWindow::on_pbImg_clicked()
             pxm1 = pxm1.scaled(300, 300, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
         imgOrig = img;
-        imgEncryp = img;
         ui->lblOrigin->setPixmap(pxm1);
 
         ui->pbStart->setEnabled(true);
